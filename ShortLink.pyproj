@@ -28,6 +28,7 @@
   <ItemGroup>
     <Compile Include="connect_settings.py" />
     <Compile Include="cmd_run.py" />
+    <Compile Include="Readme.md" />
     <Compile Include="tools.py" />
     <Compile Include="Connect_SQLite.py" />
     <Compile Include="Connect_MySQL.py" />
