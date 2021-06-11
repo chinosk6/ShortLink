@@ -10,4 +10,4 @@ class mysql:
     password = 'dbpwd'
 
 class website:
-    url = 'http://yoururl/' #Òª¼ÓºóÐ±¸Ü
+    url = 'http://yoururl/' #Don't forget at the end of the "/"
