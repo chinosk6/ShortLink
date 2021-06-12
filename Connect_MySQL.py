@@ -43,7 +43,7 @@ def insert_link(link, creator, wfrom, tablename = "shortlink"):
     pa = re.compile("^((https|http|ftp|rtsp|mms)?:\/\/).*\..*[^\s]+")
     if(len(pa.findall(link)) != 1):
         stat = False
-        return(stat, "无效网址。请不要省略\"http://\"或\"https://\"")
+        return(stat, "无效网址。请不要省略'http://'或'https://'")
 
     randstr = tools.generate_randstring(4)
 
@@ -58,7 +58,6 @@ def insert_link(link, creator, wfrom, tablename = "shortlink"):
         data = cursor.fetchall()
   
     insql = "insert into " + tablename + "(short, link, creator, wfrom) values('%s', '%s', '%s', '%s')" % (randstr, link, creator, wfrom)
-    data = cursor.fetchall()
 
     try:
         cursor.execute(insql)
@@ -74,6 +73,37 @@ def insert_link(link, creator, wfrom, tablename = "shortlink"):
     conn.close()
     return(stat, randstr)
 
+def del_link(link, tablename = "shortlink"):
+    stat = False
 
+    pa = re.compile("[A-Za-z0-9]{4}")
+    checkid = pa.findall(link)
+    if(len(checkid) != 1 or len(link) != 4):
+        return(False, "invalid parameter")
+
+    conn = get_connection()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    cursor.execute("select * from " + tablename + " where short = \'" + link + "\'")
+    data = cursor.fetchall()
+
+    if(len(data)<=0):
+        return(False, "未找到目标链接")
+  
+    insql = "DELETE FROM " + tablename + " WHERE short = \'" + link + "\'"
+
+    try:
+        cursor.execute(insql)
+        conn.commit()
+        stat = True
+        msg = '已删除记录'
+    except:
+       conn.rollback()
+       msg = '删除失败'
+       stat = False
+       
+    cursor.close()
+    conn.close()
+    return(stat, msg)
 #print(get_data("drop"))
 #print(insert_link('qwq','adm','adm'))
+#print(del_link("30fu"))

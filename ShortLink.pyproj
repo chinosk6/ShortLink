@@ -26,8 +26,8 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="connect_settings.py" />
     <Compile Include="cmd_run.py" />
+    <Compile Include="connect_settings.py" />
     <Compile Include="Readme.md" />
     <Compile Include="tools.py" />
     <Compile Include="Connect_SQLite.py" />
