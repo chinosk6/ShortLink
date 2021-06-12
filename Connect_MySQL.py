@@ -14,7 +14,7 @@ def get_connection():
     return conn
 
 
-def get_url(id):
+def get_url(id, tablename = "shortlink"):
     pa = re.compile("[A-Za-z0-9]{4}")
     checkid = pa.findall(id)
     if(len(checkid) != 1 or len(id) != 4):
@@ -22,7 +22,7 @@ def get_url(id):
 
     conn = get_connection()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
-    cursor.execute("select * from shortlink where short = '" + id + "'") 
+    cursor.execute("select * from " + tablename + " where short = %s" , id) 
     
     data = cursor.fetchall()
 
@@ -49,18 +49,16 @@ def insert_link(link, creator, wfrom, tablename = "shortlink"):
 
     conn = get_connection()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
-    cursor.execute("select * from " + tablename + " where short = \'" + randstr + "\'")
+    cursor.execute("select * from " + tablename + " where short = %s" , (randstr))
     data = cursor.fetchall()
 
     while(len(data)>0):
         randstr = tools.generate_randstring(4)
-        cursor.execute("select * from " + tablename + " where short = \'" + randstr + "\'")
+        cursor.execute("select * from " + tablename + " where short = %s" , (randstr))
         data = cursor.fetchall()
   
-    insql = "insert into " + tablename + "(short, link, creator, wfrom) values('%s', '%s', '%s', '%s')" % (randstr, link, creator, wfrom)
-
     try:
-        cursor.execute(insql)
+        cursor.execute("insert into " + tablename + "(short, link, creator, wfrom) values(%s, %s, %s, %s)" , (randstr, link, creator, wfrom))
         conn.commit()
         stat = True
         randstr = set.website.url + randstr
@@ -76,23 +74,16 @@ def insert_link(link, creator, wfrom, tablename = "shortlink"):
 def del_link(link, tablename = "shortlink"):
     stat = False
 
-    pa = re.compile("[A-Za-z0-9]{4}")
-    checkid = pa.findall(link)
-    if(len(checkid) != 1 or len(link) != 4):
-        return(False, "invalid parameter")
-
     conn = get_connection()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
-    cursor.execute("select * from " + tablename + " where short = \'" + link + "\'")
+    cursor.execute("select * from " + tablename + " where short = %s" , (link))
     data = cursor.fetchall()
 
     if(len(data)<=0):
         return(False, "未找到目标链接")
-  
-    insql = "DELETE FROM " + tablename + " WHERE short = \'" + link + "\'"
 
     try:
-        cursor.execute(insql)
+        cursor.execute("DELETE FROM " + tablename + " WHERE short = %s" , (link))
         conn.commit()
         stat = True
         msg = '已删除记录'
