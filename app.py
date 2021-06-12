@@ -39,6 +39,7 @@ def api():
             return(jsonify({"stat":0,"msg":stat[1]}), 200)
 
     elif(typ == "del"):
+        link = link.replace(set.website.url,'')
         stat = Connect_MySQL.del_link(link)
         if(stat[0] == False):
             return(jsonify({"stat":-1,"msg":stat[1]}), 400)

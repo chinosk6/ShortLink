@@ -7,7 +7,7 @@ class mysql:
     port = 3306
     db = 'dbname'
     user = 'dbusername'
-    password = 'dbpwd'
+    password = 'dbpassword'
 
 class website:
     url = 'http://yoururl/' #Don't forget at the end of the "/"
