@@ -49,10 +49,16 @@ def insert_link(link, creator, wfrom, tablename = "shortlink"):
 
     conn = get_connection()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
+
+    cursor.execute("select * from " + tablename + " where link = %s" , (link)) #链接查重
+    data = cursor.fetchall()
+    if(len(data) > 0):
+        return(True, set.website.url + data[0]['short'])
+
     cursor.execute("select * from " + tablename + " where short = %s" , (randstr))
     data = cursor.fetchall()
 
-    while(len(data)>0):
+    while(len(data)>0):  #随机数查重
         randstr = tools.generate_randstring(4)
         cursor.execute("select * from " + tablename + " where short = %s" , (randstr))
         data = cursor.fetchall()
@@ -96,5 +102,5 @@ def del_link(link, tablename = "shortlink"):
     conn.close()
     return(stat, msg)
 #print(get_data("drop"))
-#print(insert_link('qwq','adm','adm'))
+#print(insert_link('http://chinosk.top/','adm','adm'))
 #print(del_link("30fu"))

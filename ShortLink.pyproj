@@ -27,6 +27,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="cmd_run.py" />
+    <Compile Include="Connect_MySQL_防注入例.py" />
     <Compile Include="connect_settings.py" />
     <Compile Include="Readme.md" />
     <Compile Include="tools.py" />
